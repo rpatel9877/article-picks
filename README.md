@@ -77,7 +77,7 @@ Leave `USE_SAMPLE_DATA = True` for an offline demo, or set it to `False` and pas
 
 **Team:** open the link, choose your name (it's remembered next time), paste links, submit.
 
-**Adam or Megan (Dashboard):**
+**Dashboard:**
 - See every link with its score and the current top 5 as submissions come in
 - **Download Word report** any time for a preview
 - **Email report now** to send it early or resend it

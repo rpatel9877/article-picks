@@ -43,8 +43,8 @@ To see a sample report without internet access or an API key: `python manage.py 
 Open **Settings** and fill in:
 
 1. **Team members**, one per line: `Name, email`
-2. **Send the Thursday report to**: Adam's email (and Megan's if she wants a copy)
-3. **Our approach and view of the markets**: a few plain sentences in Adam's words
+2. **Send the Thursday report to**: email
+3. **Our approach and view of the markets**: a few plain sentences
 4. **Past Friday emails**: paste two or three past client emails (recommended; this is what teaches the AI the firm's taste)
 
 ## Deploy

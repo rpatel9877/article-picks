@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Submit an article{% endblock %}
+{% block main_class %}narrow{% endblock %}
+{% block content %}
+<h1>Send an article for Friday&rsquo;s client email</h1>
+<p class="deadline">Closes {{ deadline }}. <strong>{{ total }} link{{ '' if total == 1 else 's' }}</strong> in so far this week.</p>
+
+<form method="post" class="panel" novalidate>
+  <label for="submitter">Your name</label>
+  <select id="submitter" name="submitter" required>
+    <option value="">Choose your name</option>
+    {% for p in team %}<option value="{{ p.name }}" {% if p.name == selected %}selected{% endif %}>{{ p.name }}</option>{% endfor %}
+  </select>
+
+  <label for="links">Links</label>
+  <p class="hint" id="links-hint">Paste one or more links, one per line.</p>
+  <textarea id="links" name="links" rows="5" required aria-describedby="links-hint"
+    placeholder="https://www.example.com/an-article-worth-reading">{{ links }}</textarea>
+
+  <label for="note">Why it&rsquo;s worth reading <span class="optional">optional</span></label>
+  <textarea id="note" name="note" rows="2" maxlength="500">{{ note }}</textarea>
+
+  {% if need_code %}
+  <label for="code">Team code</label>
+  <input id="code" name="code" type="password" autocomplete="off" required>
+  {% endif %}
+
+  <button type="submit" class="btn">Submit links</button>
+</form>
+
+{% if mine %}
+<section class="mine">
+  <h2>Your links this week</h2>
+  <ul>
+    {% for s in mine %}<li><a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.url }}</a></li>{% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<details class="criteria">
+  <summary>What makes a good pick</summary>
+  <ul>
+    <li>Free to read, with no paywall.</li>
+    <li>A topic or angle the mainstream press isn&rsquo;t already covering widely.</li>
+    <li>Substantive but approachable: no math-heavy papers, no quick hot takes.</li>
+    <li>Reflects how we think about investing and markets.</li>
+    <li>About finance, investing, or economics, even indirectly, without a partisan slant.</li>
+  </ul>
+</details>
+{% endblock %}

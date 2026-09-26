@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="admin-head">
+  <div>
+    <h1>{% if cycle_id == open_cycle %}This week&rsquo;s submissions{% else %}Past week{% endif %}</h1>
+    <p class="deadline">{% if cycle_id == open_cycle %}Closes{% else %}Closed{% endif %} {{ label(cycle_id) }}. {{ items|length }} unique link{{ '' if items|length == 1 else 's' }}.</p>
+  </div>
+  <form method="get" class="week-picker">
+    <label for="week">Week</label>
+    <select id="week" name="week" onchange="this.form.submit()">
+      {% for c in cycles %}<option value="{{ c }}" {% if c == cycle_id %}selected{% endif %}>{{ short_label(c) }}{% if c == open_cycle %} (open){% endif %}</option>{% endfor %}
+    </select>
+    <noscript><button class="btn btn-quiet">Show</button></noscript>
+  </form>
+</div>
+
+<div class="setup">
+  <p><span class="dot {{ 'on' if ai_on else 'off' }}"></span>AI scoring {{ 'on' if ai_on else 'off (basic rules)' }}</p>
+  <p><span class="dot {{ 'on' if email_on else 'off' }}"></span>Email {{ 'on' if email_on else 'off (saved to outbox)' }}</p>
+  <p><span class="dot {{ 'on' if recipients else 'off' }}"></span>Report goes to {{ recipients|join(', ') if recipients else 'nobody yet' }}</p>
+  <p><span class="dot {{ 'on' if team_count else 'off' }}"></span>{{ team_count }} team member{{ '' if team_count == 1 else 's' }}</p>
+</div>
+
+<div class="actions">
+  <a class="btn" href="{{ url_for('download_report', cycle_id=cycle_id) }}">Download Word report</a>
+  <form method="post" action="{{ url_for('email_report', cycle_id=cycle_id) }}"><button class="btn btn-quiet">Email report now</button></form>
+  {% if cycle_id == open_cycle %}
+  <form method="post" action="{{ url_for('email_reminder') }}"><button class="btn btn-quiet">Send reminder now</button></form>
+  {% endif %}
+  <form method="post" action="{{ url_for('rescore', cycle_id=cycle_id) }}"><button class="btn btn-quiet">Re-score links</button></form>
+</div>
+{% if pending %}<p class="hint">{{ pending }} link{{ ' is' if pending == 1 else 's are' }} still being read and scored. Refresh in a minute. The report will score anything left automatically.</p>{% endif %}
+
+{% if items %}
+<div class="table-wrap">
+<table class="links">
+  <thead><tr><th scope="col">Pick</th><th scope="col">Article</th><th scope="col">Sent by</th><th scope="col">Score</th><th scope="col"><span class="sr-only">Remove</span></th></tr></thead>
+  <tbody>
+  {% for i in items %}
+    <tr class="{{ 'is-top' if i.rank }}">
+      <td class="pick">{% if i.rank %}<span class="rank">{{ i.rank }}</span>{% endif %}</td>
+      <td>
+        <a class="title" href="{{ i.url }}" target="_blank" rel="noopener">{{ i.title or i.url }}</a>
+        <span class="sub">{{ i.site or i.domain or i.url.split('/')[2] }}{% if i.word_count %}, about {{ '{:,}'.format(i.word_count) }} words{% endif %}</span>
+        {% if i.pending %}<span class="status status-wait">Being scored</span>
+        {% elif i.exclude_reasons %}<span class="status status-no">{{ i.exclude_reasons|join('; ') }}</span>
+        {% elif i.paywall == 'unknown' %}<span class="status status-check">Check paywall: {{ i.paywall_reason }}</span>
+        {% endif %}
+        {% if i.why and not i.pending %}<span class="why">{{ i.why }}</span>{% endif %}
+      </td>
+      <td>{{ i.submitters|join(', ') }}</td>
+      <td class="score">{{ i.overall if i.overall is not none else '' }}</td>
+      <td>
+        <form method="post" action="{{ url_for('delete_submission') }}" onsubmit="return confirm('Remove this link from the week?')">
+          {% for sid in i.ids %}<input type="hidden" name="ids" value="{{ sid }}">{% endfor %}
+          <button class="linklike danger" aria-label="Remove {{ i.title or i.url }}">Remove</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<div class="empty">
+  <p>No links yet for this week.</p>
+  <p class="hint">Share the submission page with the team: <a href="{{ url_for('submit_form', _external=True) }}">{{ url_for('submit_form', _external=True) }}</a></p>
+</div>
+{% endif %}
+
+{% if runs %}
+<section class="runs">
+  <h2>Recent automatic sends</h2>
+  <ul>
+  {% for r in runs %}
+    <li><strong>{{ 'Monday reminder' if r.job == 'reminder' else 'Thursday report' }}</strong> for {{ short_label(r.cycle) }}: {{ r.status }}{% if r.detail %}. {{ r.detail }}{% endif %}</li>
+  {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

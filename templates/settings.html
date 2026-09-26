@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block main_class %}narrow{% endblock %}
+{% block content %}
+<h1>Settings</h1>
+<form method="post" class="panel settings">
+  <fieldset>
+    <legend>People</legend>
+    <label for="team_members">Team members</label>
+    <p class="hint">One person per line, as <em>Name, email</em>. Names appear in the form&rsquo;s dropdown; emails get the Monday reminder.</p>
+    <textarea id="team_members" name="team_members" rows="7">{{ s.team_members }}</textarea>
+
+    <label for="report_recipients">Send the Thursday report to</label>
+    <p class="hint">Emails separated by commas, for example Adam and Megan.</p>
+    <input id="report_recipients" name="report_recipients" value="{{ s.report_recipients }}">
+
+    <label for="reminder_cc">Copy the Monday reminder to <span class="optional">optional</span></label>
+    <input id="reminder_cc" name="reminder_cc" value="{{ s.reminder_cc }}">
+  </fieldset>
+
+  <fieldset>
+    <legend>How to pick the top 5</legend>
+    <label for="worldview">Our approach and view of the markets</label>
+    <p class="hint">The AI compares every article against this. A few plain sentences work best. Update it when your views change.</p>
+    <textarea id="worldview" name="worldview" rows="8">{{ s.worldview }}</textarea>
+
+    <label for="past_examples">Our investment letters and video transcripts <span class="optional">recommended</span></label>
+    <p class="hint">Paste recent investment letters and YouTube transcripts. The AI scores every article against this, in your own words.</p>
+    <textarea id="past_examples" name="past_examples" rows="14">{{ s.past_examples }}</textarea>
+
+    <label for="extra_paywall_domains">Extra paywalled sites <span class="optional">optional</span></label>
+    <p class="hint">Add any site that should always count as paywalled, for example <em>example.com</em>. Major ones like the WSJ, FT, and Bloomberg are already covered.</p>
+    <input id="extra_paywall_domains" name="extra_paywall_domains" value="{{ s.extra_paywall_domains }}">
+  </fieldset>
+
+  <fieldset>
+    <legend>Automatic emails</legend>
+    <label class="check"><input type="checkbox" name="reminders_enabled" {% if s.reminders_enabled == '1' %}checked{% endif %}> Send the Monday reminder to the team</label>
+    <label class="check"><input type="checkbox" name="reports_enabled" {% if s.reports_enabled == '1' %}checked{% endif %}> Email the Word report after the Thursday noon deadline</label>
+  </fieldset>
+
+  <button class="btn" type="submit">Save settings</button>
+</form>
+{% endblock %}

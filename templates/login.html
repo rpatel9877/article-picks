@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block main_class %}narrow{% endblock %}
+{% block content %}
+<h1>Admin sign in</h1>
+<form method="post" class="panel">
+  <label for="password">Password</label>
+  <input id="password" name="password" type="password" autofocus required>
+  <button class="btn" type="submit">Sign in</button>
+</form>
+{% endblock %}

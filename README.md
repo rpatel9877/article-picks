@@ -4,7 +4,7 @@ Automates steps 1 to 3 of the Friday client email:
 
 1. **Monday reminder.** Every Monday at 9 AM the team gets an email with a link to the submission page.
 2. **Submission page.** Team members pick their name, paste one or more links, and optionally say why. Links are accepted until **Thursday at 12:00 PM**; anything later rolls into next week automatically.
-3. **Thursday report.** Right after the deadline, a Word document is emailed to Adam with every link listed next to the person who sent it, and the **likely top 5 in bold** based on his criteria.
+3. **Thursday report.** Right after the deadline, a Word document is emailed with every link listed next to the person who sent it, and the **likely top 5 in bold** based on his criteria.
 
 Each link is opened and read as soon as it is submitted, so the report is ready the moment the deadline passes.
 
@@ -96,7 +96,7 @@ Scoring one article with Claude costs roughly one to two cents. At 20 to 40 link
 | `app.py` | Web pages: submission form, dashboard, settings |
 | `cycle.py` | Weekly deadline logic (Thursday noon, time zone aware) |
 | `fetcher.py` | Opens links, extracts article text, detects paywalls |
-| `scorer.py` | AI scoring against Adam's criteria, fallback rules, top 5 ranking |
+| `scorer.py` | AI scoring against the criteria, fallback rules, top 5 ranking |
 | `report.py` | Builds the Word document |
 | `jobs.py` | Monday reminder, Thursday report, background scoring |
 | `scheduler.py` | Runs the job check every 10 minutes |

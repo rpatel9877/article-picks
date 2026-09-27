@@ -108,6 +108,6 @@ Scoring one article with Claude costs roughly one to two cents. At 20 to 40 link
 
 ## Possible next steps
 
-- Thursday morning "last call" to people who haven't submitted yet
+- A thursday morning "last call" to people who haven't submitted yet
 - Microsoft 365 sign-in instead of a shared password
-- Steps 4 and 5: turn Adam's final five and the draft intros into the email template and route it to compliance
+- Steps 4 and 5: turn the final five links and the draft intros into the email template and send

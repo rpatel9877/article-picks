@@ -47,21 +47,42 @@ Open **Settings** and fill in:
 3. **Our approach and view of the markets**: a few plain sentences
 4. **Past Friday emails**: paste two or three past client emails (recommended; this is what teaches the AI the firm's taste)
 
-## Deploy
+## Fill in your settings (`.env` file)
 
-The app is a standard Python web app. `render.yaml` sets it up on Render with a small persistent disk for the database; Railway, Azure App Service, or an internal server work the same way.
+All settings live in one file called `.env` in the project folder. Create it once by copying the template:
 
-Set these environment variables: `FIRM_NAME`, `APP_URL` (the public link), `SECRET_KEY`, `ADMIN_PASSWORD`, `ANTHROPIC_API_KEY`, and the `SMTP_*` settings.
+- Windows: `copy .env.example .env`
+- Mac: `cp .env.example .env`
 
-Email works with any SMTP account:
+Open `.env` in any text editor, fill in the fields below, and save. Leave anything not listed as it is.
 
-| Provider | Host | Port |
+**Required**
+
+| Field | What to enter |
+|---|---|
+| `FIRM_NAME` | Your firm's name, shown at the top of the pages |
+| `ADMIN_PASSWORD` | Any password, used to sign in to the dashboard at `/admin` |
+| `SECRET_KEY` | A long random string. Generate one with `python -c "import secrets; print(secrets.token_hex(32))"` |
+
+**AI scoring** (recommended; without it, links are ranked with basic rules)
+
+| Field | What to enter |
+|---|---|
+| `ANTHROPIC_API_KEY` | A key from console.anthropic.com (API Keys, after adding credits under Billing) |
+
+**Email** (needed for the Monday reminder and Thursday report; without it, emails are saved to `data/outbox`)
+
+| Field | Microsoft 365 / Outlook | Gmail |
 |---|---|---|
-| Microsoft 365 / Outlook | smtp.office365.com | 587 |
-| Gmail / Google Workspace | smtp.gmail.com | 587 (use an app password) |
+| `SMTP_HOST` | smtp.office365.com | smtp.gmail.com |
+| `SMTP_PORT` | 587 | 587 |
+| `SMTP_USER` | Your work email | Your Gmail address |
+| `SMTP_PASSWORD` | Your email password | An app password (Google Account > Security > App passwords) |
+| `SMTP_FROM` | The address emails come from | Same as `SMTP_USER` |
 
-Run it as a single process (`--workers 1`), as in the `Procfile`. The built-in scheduler checks every 10 minutes whether the reminder or report is due, and records each send so nothing is ever sent twice. If your host puts idle apps to sleep, set `CRON_KEY` and point a free cron service at `https://your-app/tasks/tick?key=YOUR_KEY` every 10 minutes.
+Restart the app after any change to `.env`. Never share this file; it holds your passwords and API key.
 
+**Keep in mind:** automatic emails only go out while the app is running. If your computer is off on Monday morning or Thursday at noon, start the app and it catches up within 10 minutes, or use the **Send reminder now** and **Email report now** buttons on the dashboard.
 ## Notebook walkthrough
 
 `walkthrough.ipynb` runs the same pipeline step by step: clean links, read each article, score it, rank the top 5, build the Word doc, and preview the emails. It uses its own `notebook_data/` folder, so it never touches the live app, and it doesn't send email unless you turn that on.

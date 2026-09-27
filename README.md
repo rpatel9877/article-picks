@@ -83,16 +83,6 @@ Open `.env` in any text editor, fill in the fields below, and save. Leave anythi
 Restart the app after any change to `.env`. Never share this file; it holds your passwords and API key.
 
 **Keep in mind:** automatic emails only go out while the app is running. If your computer is off on Monday morning or Thursday at noon, start the app and it catches up within 10 minutes, or use the **Send reminder now** and **Email report now** buttons on the dashboard.
-## Notebook walkthrough
-
-`walkthrough.ipynb` runs the same pipeline step by step: clean links, read each article, score it, rank the top 5, build the Word doc, and preview the emails. It uses its own `notebook_data/` folder, so it never touches the live app, and it doesn't send email unless you turn that on.
-
-```bash
-pip install -r requirements.txt -r requirements-notebook.txt
-jupyter lab walkthrough.ipynb
-```
-
-Leave `USE_SAMPLE_DATA = True` for an offline demo, or set it to `False` and paste real links into `SUBMISSIONS`.
 
 ## Everyday use
 
